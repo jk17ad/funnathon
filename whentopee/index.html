@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When to Pee 💧</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💧 When to Pee</h1>
+            <p class="subtitle">Calculate when you'll need to go!</p>
+        </header>
+
+        <div class="disclaimer">
+            ⚠️ <strong>Disclaimer:</strong> This is for educational/hackathon purposes only. Not medical advice!
+        </div>
+
+        <div class="main-content">
+            <!-- Input Section -->
+            <section class="input-section glass-card">
+                <h2>📊 Your Info</h2>
+                
+                <div class="input-group">
+                    <label>💧 Water Amount (mL)</label>
+                    <input type="range" id="waterAmount" min="50" max="1000" value="250" step="50">
+                    <span class="value-display" id="waterAmountDisplay">250 mL</span>
+                </div>
+
+                <div class="input-group">
+                    <label>🌡️ Water Temperature</label>
+                    <div class="temperature-selector">
+                        <button class="temp-btn" data-temp="ice-cold">🧊 Ice Cold</button>
+                        <button class="temp-btn" data-temp="cold">❄️ Cold</button>
+                        <button class="temp-btn active" data-temp="room">🌡️ Room</button>
+                        <button class="temp-btn" data-temp="warm">🔥 Warm</button>
+                        <button class="temp-btn" data-temp="hot">☀️ Hot</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>🥤 Type of Drink</label>
+                    <div class="drink-type-selector">
+                        <button class="drink-btn active" data-type="water">💧 Water</button>
+                        <button class="drink-btn" data-type="coffee">☕ Coffee</button>
+                        <button class="drink-btn" data-type="tea">🍵 Tea</button>
+                        <button class="drink-btn" data-type="soda">🥤 Soda</button>
+                        <button class="drink-btn" data-type="juice">🧃 Juice</button>
+                        <button class="drink-btn" data-type="alcohol">🍺 Alcohol</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>📏 Height (cm)</label>
+                    <input type="range" id="height" min="140" max="220" value="170" step="1">
+                    <span class="value-display" id="heightDisplay">170 cm</span>
+                </div>
+
+                <div class="input-group">
+                    <label>⚖️ Weight (kg)</label>
+                    <input type="range" id="weight" min="40" max="150" value="70" step="1">
+                    <span class="value-display" id="weightDisplay">70 kg</span>
+                </div>
+
+                <div class="input-group">
+                    <label>🎂 Age (optional)</label>
+                    <input type="range" id="age" min="18" max="80" value="30" step="1">
+                    <span class="value-display" id="ageDisplay">30 years</span>
+                </div>
+
+                <div class="input-group">
+                    <label>💪 Hydration Status</label>
+                    <select id="hydrationStatus">
+                        <option value="well-hydrated">💚 Well-Hydrated</option>
+                        <option value="normal" selected>😐 Normal</option>
+                        <option value="dehydrated">🥵 Dehydrated</option>
+                    </select>
+                </div>
+
+                <button class="add-log-btn" id="addLogBtn">➕ Add to Today's Log</button>
+                <button class="submit-btn" id="submitBtn">🚀 Submit & Save Data</button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section glass-card">
+                <h2>⏱️ Results</h2>
+                
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-label">Urine Production Time</div>
+                        <div class="result-value" id="urineTime">--</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">Bladder Capacity</div>
+                        <div class="result-value" id="bladderCapacity">--</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">Safe Hold Time</div>
+                        <div class="result-value" id="safeHoldTime">--</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">Max Hold Time</div>
+                        <div class="result-value" id="maxHoldTime">--</div>
+                    </div>
+                </div>
+
+                <!-- Urgency Indicator -->
+                <div class="urgency-indicator">
+                    <div class="urgency-label">Urgency Level</div>
+                    <div class="urgency-bar">
+                        <div class="urgency-fill" id="urgencyFill"></div>
+                    </div>
+                    <div class="urgency-text" id="urgencyText">😊 Relaxed</div>
+                </div>
+
+                <!-- Pee Clock -->
+                <div class="pee-clock">
+                    <div class="clock-label">⏰ Time to Urge</div>
+                    <div class="clock-display" id="peeClock">--:--</div>
+                </div>
+            </section>
+
+            <!-- Visualizations Section -->
+            <section class="visualizations-section">
+                <h2>📈 Visualizations</h2>
+                
+                <div class="charts-grid">
+                    <!-- Bladder Capacity Doughnut Chart -->
+                    <div class="chart-container glass-card">
+                        <h3>🫧 Bladder Capacity</h3>
+                        <canvas id="bladderChart"></canvas>
+                    </div>
+
+                    <!-- Urine Production Timeline -->
+                    <div class="chart-container glass-card">
+                        <h3>📊 Urine Production Timeline</h3>
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+
+                    <!-- Daily Water Intake -->
+                    <div class="chart-container glass-card">
+                        <h3>💧 Today's Water Intake</h3>
+                        <canvas id="intakeChart"></canvas>
+                    </div>
+
+                    <!-- Hold Time vs Volume -->
+                    <div class="chart-container glass-card">
+                        <h3>⏱️ Hold Time vs Volume</h3>
+                        <canvas id="holdTimeChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Animated Bladder -->
+            <section class="bladder-animation-section glass-card">
+                <h2>🫧 Your Bladder</h2>
+                <div class="bladder-container">
+                    <div class="bladder" id="bladder">
+                        <div class="bladder-fill" id="bladderFill"></div>
+                        <div class="bladder-text" id="bladderText">0%</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Health Insights -->
+            <section class="insights-section glass-card">
+                <h2>💡 Health Insights</h2>
+                
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">💧</div>
+                        <div class="insight-title">Daily Water Goal</div>
+                        <div class="insight-value" id="dailyGoal">--</div>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-title">Today's Intake</div>
+                        <div class="insight-value" id="todayIntake">0 mL</div>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <div class="insight-icon">📊</div>
+                        <div class="insight-title">Progress</div>
+                        <div class="insight-value" id="progress">0%</div>
+                    </div>
+                </div>
+
+                <div class="tips-container">
+                    <h3>💡 Tips</h3>
+                    <ul id="tipsList">
+                        <li>💧 Drink water regularly throughout the day</li>
+                        <li>🚽 Don't hold it for more than 3-4 hours</li>
+                        <li>🥤 Avoid excessive caffeine and alcohol</li>
+                        <li>🏃‍♂️ Stay active for better bladder health</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box" id="warningBox" style="display: none;">
+                    ⚠️ <strong>Warning:</strong> Holding for more than 5 hours regularly can harm your bladder!
+                </div>
+            </section>
+
+            <!-- Achievement Badges -->
+            <section class="achievements-section glass-card">
+                <h2>🏆 Achievements</h2>
+                <div class="badges-grid" id="badgesGrid">
+                    <div class="badge locked" id="badgeFirstLog">
+                        <div class="badge-icon">🥤</div>
+                        <div class="badge-name">First Log</div>
+                    </div>
+                    <div class="badge locked" id="badgeHydrated">
+                        <div class="badge-icon">💧</div>
+                        <div class="badge-name">Well Hydrated</div>
+                    </div>
+                    <div class="badge locked" id="badgeChampion">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name">Hydration Champion</div>
+                    </div>
+                    <div class="badge locked" id="badgeConsistent">
+                        <div class="badge-icon">📅</div>
+                        <div class="badge-name">Consistent</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sound Toggle -->
+            <div class="sound-toggle">
+                <button id="soundToggle">🔊 Sound Effects: ON</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Made with 💧 for Hackathon | Not medical advice</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
